@@ -1,0 +1,50 @@
+apply plugin: 'com.android.application'
+
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId rootProject.ext.appPackageName
+        minSdkVersion 20
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
+    }
+
+    signingConfigs {
+        release {
+            if (rootProject.ext.releaseStoreFile != null) {
+                storeFile file(rootProject.ext.releaseStoreFile)
+                storePassword rootProject.ext.releaseStorePassword
+                keyAlias rootProject.ext.releaseStoreAlias
+                keyPassword rootProject.ext.releaseStoreAliasPassword
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-debug'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+}
+
+dependencies {
+    compile project(':common')
+    compile 'com.google.android.support:wearable:1.1.0'
+    compile 'com.google.android.gms:play-services-wearable:6.5.87'
+    compile 'com.jakewharton.timber:timber:2.5.0'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}

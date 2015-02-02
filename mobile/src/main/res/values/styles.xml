@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources >
+    <style name="ListItem" />
+
+    <style name="ListItem.Text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ListItem.Text.Primary">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:textColor">@color/primary_text</item>
+    </style>
+
+    <style name="ListItem.Text.Secondary">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
+        <item name="android:textColor">@color/secondary_text</item>
+    </style>
+
+    <style name="SettingItemView">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+    </style>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="default_padding">16dp</dimen>
+    <dimen name="setting_item_icon_size">48dp</dimen>
+    <dimen name="hero_element_height">250dp</dimen>
+    <dimen name="hero_element_padding_left">80dp</dimen>
+</resources>

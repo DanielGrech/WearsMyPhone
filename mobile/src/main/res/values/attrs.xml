@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="primary" format="string|reference" />
+    <attr name="secondary" format="string|reference" />
+
+    <declare-styleable name="SettingItemView">
+        <attr name="primary" />
+        <attr name="secondary" />
+        <attr name="settingIcon" format="reference" />
+        <attr name="showSwitch" format="reference|boolean" />
+    </declare-styleable>
+
+</resources>

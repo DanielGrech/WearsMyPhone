@@ -1,0 +1,10 @@
+<resources>
+    <string name="setting_title_ringtone">Ringtone</string>
+    <string name="setting_title_duration">Duration</string>
+    <string name="connected">Connected</string>
+    <string name="title_no_devices">No devices found</string>
+    <string name="subtitle_no_devices">No Android Wear devices connected</string>
+    <string name="x_devices_connected">%1$s devices connected</string>
+    <string name="setting_title_flashlight">Flash Light</string>
+    <string name="setting_title_vibrate">Vibrate</string>
+</resources>
