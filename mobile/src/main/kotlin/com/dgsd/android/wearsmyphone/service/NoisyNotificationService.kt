@@ -4,9 +4,6 @@ import android.app.IntentService
 import android.content.Intent
 import android.content.Context
 
-private val ACTION_START : String = "_action_start"
-private val ACTION_STOP : String = "_action_stop"
-
 /**
  * Service responsible for starting/stopping the ringing intended to notify the user.
  *
@@ -17,6 +14,9 @@ public class NoisyNotificationService :
         IntentService(NoisyNotificationService.javaClass.getSimpleName()) {
 
     class object {
+        private val ACTION_START : String = "_action_start"
+        private val ACTION_STOP : String = "_action_stop"
+
         public fun startNotify(context: Context) {
             val intent = Intent(context, NoisyNotificationService.javaClass).setAction(ACTION_START)
             context.startService(intent)

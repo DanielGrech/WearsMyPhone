@@ -3,8 +3,7 @@ package com.dgsd.android.wearsmyphone.util
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-
-import com.dgsd.android.wearsmyphone.R
+import com.dgsd.android.wearsmyphone.model.DurationOptions
 
 public class AppPreferences private(context: Context) {
 
@@ -14,6 +13,7 @@ public class AppPreferences private(context: Context) {
 
         private val PREF_KEY_VIBRATE_ENABLED = "_vibrate_enabled"
         private val PREF_KEY_FLASH_LIGHT_ENABLED = "_flashlight_enabled"
+        private val PREF_KEY_ALERT_DURATION = "_alert_duration"
 
         private var instance: AppPreferences? = null
 
@@ -27,6 +27,15 @@ public class AppPreferences private(context: Context) {
 
     {
         preferences = PreferenceManager.getDefaultSharedPreferences(context)
+    }
+
+    public fun setDurationForAlert(duration: Long) {
+        setLong(PREF_KEY_ALERT_DURATION, duration)
+    }
+
+    public fun getDurationForAlert(): Long {
+        return preferences.getLong(PREF_KEY_ALERT_DURATION,
+                DurationOptions.INFINITE.durationInSeconds())
     }
 
     public fun setFlashlightEnabled(enabled: Boolean) {

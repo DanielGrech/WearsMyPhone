@@ -7,4 +7,16 @@
     <string name="x_devices_connected">%1$s devices connected</string>
     <string name="setting_title_flashlight">Flash Light</string>
     <string name="setting_title_vibrate">Vibrate</string>
+    <string name="default_page_title">Searching...</string>
+    <string name="default_page_subtitle">Having a look for Android Wear devices</string>
+
+    <string name="duration_labal_ten_seconds">10 Seconds</string>
+    <string name="duration_labal_thirty_seconds">30 Seconds</string>
+    <string name="duration_labal_1_minute">1 Minute</string>
+    <string name="duration_labal_three_minutes">3 Minutes</string>
+    <string name="duration_labal_five_minutes">5 Minutes</string>
+    <string name="duration_labal_ten_minutes">10 Minutes</string>
+    <string name="duration_labal_thirty_minutes">30 Minutes</string>
+    <string name="duration_labal_one_hour">1 Hour</string>
+    <string name="duration_labal_infinite">Forever</string>
 </resources>

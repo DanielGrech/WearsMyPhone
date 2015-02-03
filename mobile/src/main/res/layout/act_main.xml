@@ -34,6 +34,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:textColor="@android:color/white"
+                android:text="@string/default_page_title"
                 tools:text="Daniel's Gear Live"/>
 
             <TextView
@@ -42,6 +43,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@android:color/white"
+                android:text="@string/default_page_subtitle"
                 tools:text="Connected"/>
 
         </LinearLayout>

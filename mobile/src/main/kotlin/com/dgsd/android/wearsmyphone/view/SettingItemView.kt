@@ -12,8 +12,9 @@ import android.view.View
 import rx.android.schedulers.AndroidSchedulers
 import rx.subjects.PublishSubject
 import rx.Observable
+import android.widget.Checkable
 
-public class SettingItemView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
+public class SettingItemView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), Checkable {
 
     private val primary: TextView
     private val secondary: TextView
@@ -34,6 +35,10 @@ public class SettingItemView(context: Context, attrs: AttributeSet) : LinearLayo
         icon = findViewById(R.id.icon) as ImageView
         toggle = findViewById(R.id.toggle) as Switch
 
+        toggle.setOnCheckedChangeListener { (btn, isChecked) ->
+            onCheckChangedSubject.onNext(isChecked)
+        }
+
         val ta = context.obtainStyledAttributes(attrs, R.styleable.SettingItemView, 0, 0)
         try {
             primary.setText(ta.getString(R.styleable.SettingItemView_primary))
@@ -53,4 +58,17 @@ public class SettingItemView(context: Context, attrs: AttributeSet) : LinearLayo
     public fun observeCheckChange() : Observable<Boolean> {
         return onCheckChangedSubject.asObservable()
     }
+
+    override fun setChecked(checked: Boolean) {
+        toggle.setChecked(checked)
+    }
+
+    override fun isChecked(): Boolean {
+        return toggle.isChecked()
+    }
+
+    override fun toggle() {
+        toggle.toggle()
+    }
+
 }
