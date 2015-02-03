@@ -10,6 +10,7 @@ import android.text.TextUtils
 import rx.Observable
 import rx.android.view.OnClickEvent
 import rx.android.view.ViewObservable
+import com.dgsd.android.wearsmyphone.model.DurationOption
 
 fun String.sentenceCase(): String {
     when {
@@ -77,6 +78,19 @@ public class MainActivityView(context: Context, attrs: AttributeSet) : ScrollVie
         setSubtitle(subtitle);
     }
 
+    public fun setDurationOption(option: DurationOption) {
+        val text: String
+        when (option) {
+            DurationOption.INFINITE -> {
+                text = getResources().getString(R.string.alert_for_infinite)
+            }
+            else -> {
+                val optionText = getResources().getString(option.displayStringRes)
+                text = getResources().getString(R.string.alert_for_x, optionText)
+            }
+        }
+        durationSetting?.setSecondary(text)
+    }
 
     public fun setVibrateStatus(enabled: Boolean) {
         vibrationSetting?.setChecked(enabled)

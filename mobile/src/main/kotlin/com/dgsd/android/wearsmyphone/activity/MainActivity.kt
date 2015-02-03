@@ -16,6 +16,8 @@ import com.dgsd.android.common.WearableConstants
 import com.google.android.gms.wearable.DataMapItem
 import android.text.TextUtils
 import com.dgsd.android.wearsmyphone.fragment.DurationChoiceDialogFragment
+import com.dgsd.android.wearsmyphone.model.DurationOption
+import rx.functions.Action1
 
 public class MainActivity : ActionBarActivity(), DataApi.DataListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
@@ -54,6 +56,10 @@ public class MainActivity : ActionBarActivity(), DataApi.DataListener, GoogleApi
         contentView?.observeFlashlightChange()?.subscribe({ prefs?.setFlashlightEnabled(it) })
         contentView?.observeDurationClick()?.subscribe({ showDurationDialog() })
         contentView?.observeDurationClick()?.subscribe({ showRingtoneDialog() })
+
+        val durationOption = DurationOption.fromDurationInSeconds(prefs!!.getDurationForAlert())
+                ?: DurationOption.INFINITE
+        contentView?.setDurationOption(durationOption)
     }
 
     override fun onDestroy() {
@@ -115,8 +121,12 @@ public class MainActivity : ActionBarActivity(), DataApi.DataListener, GoogleApi
     }
 
     fun showDurationDialog() {
-        DurationChoiceDialogFragment.newInstance(this)
-                .show(getSupportFragmentManager(), "duration_dialog")
+        val dialog =  DurationChoiceDialogFragment.newInstance(this)
+        dialog.setOnItemSelectionAction(Action1<DurationOption> { option ->
+            contentView?.setDurationOption(option)
+        })
+
+        dialog.show(getSupportFragmentManager(), "duration_dialog")
     }
 
     fun showRingtoneDialog() {

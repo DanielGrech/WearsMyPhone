@@ -9,6 +9,8 @@
     <string name="setting_title_vibrate">Vibrate</string>
     <string name="default_page_title">Searching...</string>
     <string name="default_page_subtitle">Having a look for Android Wear devices</string>
+    <string name="alert_for_x">Alert for %1$s</string>
+    <string name="alert_for_infinite">Dont stop ringing until found</string>
 
     <string name="duration_labal_ten_seconds">10 Seconds</string>
     <string name="duration_labal_thirty_seconds">30 Seconds</string>
@@ -19,4 +21,6 @@
     <string name="duration_labal_thirty_minutes">30 Minutes</string>
     <string name="duration_labal_one_hour">1 Hour</string>
     <string name="duration_labal_infinite">Forever</string>
+    <string name="setting_summary_flashlight">Turn on flashlight when alert goes off</string>
+    <string name="setting_summary_vibrate">Phone vibrates when alert goes off</string>
 </resources>

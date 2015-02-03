@@ -3,7 +3,7 @@ package com.dgsd.android.wearsmyphone.util
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import com.dgsd.android.wearsmyphone.model.DurationOptions
+import com.dgsd.android.wearsmyphone.model.DurationOption
 
 public class AppPreferences private(context: Context) {
 
@@ -35,7 +35,7 @@ public class AppPreferences private(context: Context) {
 
     public fun getDurationForAlert(): Long {
         return preferences.getLong(PREF_KEY_ALERT_DURATION,
-                DurationOptions.INFINITE.durationInSeconds())
+                DurationOption.INFINITE.durationInSeconds())
     }
 
     public fun setFlashlightEnabled(enabled: Boolean) {

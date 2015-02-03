@@ -9,14 +9,20 @@ import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.widget.TextView
 import com.dgsd.android.wearsmyphone.util.AppPreferences
-import com.dgsd.android.wearsmyphone.model.DurationOptions
+import com.dgsd.android.wearsmyphone.model.DurationOption
 import android.graphics.Typeface
+import rx.subjects.BehaviorSubject
+import rx.android.schedulers.AndroidSchedulers
+import rx.Observable
+import rx.functions.Action1
 
 public class DurationChoiceDialogFragment : AlertDialogFragment() {
 
     private var prefs : AppPreferences? = null
 
-    private var currentOption: DurationOptions? = null
+    private var currentOption: DurationOption? = null
+
+    private var onItemSelectedAction : Action1<in DurationOption>? = null
 
     class object {
 
@@ -36,32 +42,40 @@ public class DurationChoiceDialogFragment : AlertDialogFragment() {
         super.onCreate(savedInstanceState)
         prefs = AppPreferences.getInstance(getActivity())
 
-        currentOption = DurationOptions.fromDurationInSeconds(prefs!!.getDurationForAlert())
-                ?: DurationOptions.INFINITE
+        currentOption = DurationOption.fromDurationInSeconds(prefs!!.getDurationForAlert())
+                ?: DurationOption.INFINITE
     }
 
     override fun getDialogBuilder(): AlertDialog.Builder {
         val adapter = DurationAdapter()
-        adapter.populate(DurationOptions.values().toArrayList())
+        adapter.populate(DurationOption.values().toArrayList())
 
         val builder = super.getDialogBuilder()
         builder.setAdapter(adapter, { (dialog, which) ->
-            prefs?.setDurationForAlert(adapter.getItem(which).durationInSeconds())
+            val option = adapter.getItem(which)
+
+            prefs?.setDurationForAlert(option.durationInSeconds())
+
+            onItemSelectedAction?.call(option)
+
             dialog.dismiss()
         })
         return builder
     }
 
-    private inner class DurationAdapter : BaseViewConvertingAdapter<DurationOptions, TextView>() {
+    public fun setOnItemSelectionAction(action: Action1<in DurationOption>) {
+        this.onItemSelectedAction = action
+    }
+
+    private inner class DurationAdapter : BaseViewConvertingAdapter<DurationOption, TextView>() {
 
         override fun createView(parent: ViewGroup): TextView {
             return LayoutInflater.from(parent.getContext()).inflate(
                     R.layout.li_dialog_item, parent, false) as TextView
         }
 
-        override fun populateView(data: DurationOptions, view: TextView) {
+        override fun populateView(data: DurationOption, view: TextView) {
             view.setText(data.displayStringRes)
-
             view.setTypeface(
                     if (data.equals(currentOption)) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
             )

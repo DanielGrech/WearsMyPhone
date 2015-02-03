@@ -55,6 +55,10 @@ public class SettingItemView(context: Context, attrs: AttributeSet) : LinearLayo
         }
     }
 
+    public fun setSecondary(text: String) {
+        secondary.setText(text)
+    }
+
     public fun observeCheckChange() : Observable<Boolean> {
         return onCheckChangedSubject.asObservable()
     }

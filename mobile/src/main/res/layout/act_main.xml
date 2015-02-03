@@ -58,21 +58,21 @@
         <com.dgsd.android.wearsmyphone.view.SettingItemView
             android:id="@+id/duration"
             app:primary="@string/setting_title_duration"
-            app:secondary="This is the secondary"
             app:settingIcon="@drawable/ic_launcher"
             style="@style/SettingItemView"/>
 
         <com.dgsd.android.wearsmyphone.view.SettingItemView
             android:id="@+id/vibrate"
             app:primary="@string/setting_title_vibrate"
-            app:secondary="This is the secondary"
+            app:secondary="@string/setting_summary_vibrate"
             app:settingIcon="@drawable/ic_launcher"
             app:showSwitch="true"
             style="@style/SettingItemView"/>
+
         <com.dgsd.android.wearsmyphone.view.SettingItemView
             android:id="@+id/flashlight"
             app:primary="@string/setting_title_flashlight"
-            app:secondary="This is the secondary"
+            app:secondary="@string/setting_summary_flashlight"
             app:settingIcon="@drawable/ic_launcher"
             app:showSwitch="true"
             style="@style/SettingItemView"/>
