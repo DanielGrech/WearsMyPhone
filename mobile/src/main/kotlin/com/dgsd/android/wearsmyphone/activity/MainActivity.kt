@@ -18,6 +18,7 @@ import android.text.TextUtils
 import com.dgsd.android.wearsmyphone.fragment.DurationChoiceDialogFragment
 import com.dgsd.android.wearsmyphone.model.DurationOption
 import rx.functions.Action1
+import android.view.Menu
 
 public class MainActivity : ActionBarActivity(), DataApi.DataListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
@@ -33,6 +34,8 @@ public class MainActivity : ActionBarActivity(), DataApi.DataListener, GoogleApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super<ActionBarActivity>.onCreate(savedInstanceState)
         setContentView(R.layout.act_main)
+
+        getSupportActionBar().setElevation(0f);
 
         prefs = AppPreferences.getInstance(this)
 
@@ -69,6 +72,11 @@ public class MainActivity : ActionBarActivity(), DataApi.DataListener, GoogleApi
         }
         peerNames.clear()
         super<ActionBarActivity>.onDestroy()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        getMenuInflater().inflate(R.menu.act_main, menu)
+        return super<ActionBarActivity>.onCreateOptionsMenu(menu)
     }
 
     override fun onConnected(bundle: Bundle?) {
