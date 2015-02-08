@@ -19,10 +19,10 @@ import rx.android.content.ContentObservable
 import android.content.IntentFilter
 import com.dgsd.android.wearsmyphone.util.onPreDraw
 import android.widget.TextView
-import com.dgsd.android.wearsmyphone.util.fadeIn
 import rx.Subscription
 import android.os.Build
 import android.media.AudioAttributes
+import com.dgsd.android.wearsmyphone.util.fadeAndScaleIn
 
 public class AlertActivity : ActionBarActivity() {
 
@@ -77,7 +77,7 @@ public class AlertActivity : ActionBarActivity() {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         circleBackground?.observeAnimationEnd()?.subscribe({ view ->
-            label?.fadeIn()
+            label?.fadeAndScaleIn()
         })
 
         circleBackground?.onPreDraw {
