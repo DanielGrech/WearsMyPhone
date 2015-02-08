@@ -71,6 +71,8 @@ public class MainActivity : ActionBarActivity(), DataApi.DataListener, GoogleApi
                 ?: DurationOption.INFINITE
         contentView?.setDurationOption(durationOption)
 
+        setRingtoneTitle()
+
         val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         contentView?.setVibrateSupported(vibrator.hasVibrator())
     }
@@ -152,6 +154,7 @@ public class MainActivity : ActionBarActivity(), DataApi.DataListener, GoogleApi
         if (requestCode.equals(REQUEST_CODE_RINGTONE)) {
             val uri = data?.getParcelableExtra<Uri>(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
             prefs?.setRingtoneUri(uri ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE))
+            setRingtoneTitle()
         } else {
             super<ActionBarActivity>.onActivityResult(requestCode, resultCode, data)
         }
@@ -187,5 +190,10 @@ public class MainActivity : ActionBarActivity(), DataApi.DataListener, GoogleApi
         ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.setting_title_ringtone))
 
         startActivityForResult(ringtoneIntent, REQUEST_CODE_RINGTONE)
+    }
+
+    private fun setRingtoneTitle() {
+        val title = RingtoneManager.getRingtone(this, prefs?.getRingtoneUri()).getTitle(this)
+        contentView?.setRingtoneTitle(title)
     }
 }

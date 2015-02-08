@@ -96,6 +96,10 @@ public class MainActivityView(context: Context, attrs: AttributeSet) : ScrollVie
         durationSetting?.setSecondary(text)
     }
 
+    public fun setRingtoneTitle(title: String) {
+        ringtoneSetting?.setSecondary(title)
+    }
+
     public fun setVibrateSupported(supported: Boolean) {
         vibrationSetting?.setVisibility(if (supported) View.VISIBLE else View.GONE)
     }
