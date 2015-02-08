@@ -1,2 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/Users/daniel/dev/dgsd/WearsMyPhone/common/src/main/res"/><source path="/Users/daniel/dev/dgsd/WearsMyPhone/common/build/generated/res/rs/release"/><source path="/Users/daniel/dev/dgsd/WearsMyPhone/common/build/generated/res/generated/release"/></dataSet><dataSet config="release"><source path="/Users/daniel/dev/dgsd/WearsMyPhone/common/src/release/res"/></dataSet><mergedItems/></merger>
