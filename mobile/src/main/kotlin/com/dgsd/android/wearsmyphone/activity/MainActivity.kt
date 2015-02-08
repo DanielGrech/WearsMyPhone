@@ -19,9 +19,20 @@ import com.dgsd.android.wearsmyphone.fragment.DurationChoiceDialogFragment
 import com.dgsd.android.wearsmyphone.model.DurationOption
 import rx.functions.Action1
 import android.view.Menu
+import android.view.MenuItem
+import android.content.Intent
+import android.content.Context
+import android.os.Vibrator
+import android.media.RingtoneManager
+import android.net.Uri
+import com.dgsd.android.wearsmyphone.service.NoisyNotificationService
 
 public class MainActivity : ActionBarActivity(), DataApi.DataListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
+
+    class object {
+        private val REQUEST_CODE_RINGTONE = 0x01
+    }
 
     private var apiClient: GoogleApiClient? = null
 
@@ -47,10 +58,6 @@ public class MainActivity : ActionBarActivity(), DataApi.DataListener, GoogleApi
                 .addOnConnectionFailedListener(this)
                 .build()
         apiClient!!.connect()
-    }
-
-    override fun onResume() {
-        super<ActionBarActivity>.onResume()
 
         contentView?.setVibrateStatus(prefs!!.isVibrateEnabled())
         contentView?.setFlashlightStatus(prefs!!.isFlashlightEnabled())
@@ -58,11 +65,14 @@ public class MainActivity : ActionBarActivity(), DataApi.DataListener, GoogleApi
         contentView?.observeVibrateCheckChange()?.subscribe({ prefs?.setVibrateEnabled(it) })
         contentView?.observeFlashlightChange()?.subscribe({ prefs?.setFlashlightEnabled(it) })
         contentView?.observeDurationClick()?.subscribe({ showDurationDialog() })
-        contentView?.observeDurationClick()?.subscribe({ showRingtoneDialog() })
+        contentView?.observeRingtoneClick()?.subscribe({ showRingtoneDialog() })
 
         val durationOption = DurationOption.fromDurationInSeconds(prefs!!.getDurationForAlert())
                 ?: DurationOption.INFINITE
         contentView?.setDurationOption(durationOption)
+
+        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        contentView?.setVibrateSupported(vibrator.hasVibrator())
     }
 
     override fun onDestroy() {
@@ -77,6 +87,16 @@ public class MainActivity : ActionBarActivity(), DataApi.DataListener, GoogleApi
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         getMenuInflater().inflate(R.menu.act_main, menu)
         return super<ActionBarActivity>.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.getItemId()) {
+            R.id.test_alert -> {
+                startAlert()
+                return true
+            }
+            else -> return super<ActionBarActivity>.onOptionsItemSelected(item)
+        }
     }
 
     override fun onConnected(bundle: Bundle?) {
@@ -128,15 +148,44 @@ public class MainActivity : ActionBarActivity(), DataApi.DataListener, GoogleApi
         }
     }
 
-    fun showDurationDialog() {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode.equals(REQUEST_CODE_RINGTONE)) {
+            val uri = data?.getParcelableExtra<Uri>(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
+            prefs?.setRingtoneUri(uri ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE))
+        } else {
+            super<ActionBarActivity>.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    private fun startAlert() {
+        NoisyNotificationService.startNotify(this)
+    }
+
+    private fun showDurationDialog() {
+        val tag = "duration_dialog"
+        val fm = getSupportFragmentManager()
+
+        val existingDialog = fm.findFragmentByTag(tag)
+        if (existingDialog != null && existingDialog is DurationChoiceDialogFragment) {
+            existingDialog.dismissAllowingStateLoss()
+        }
+
         val dialog =  DurationChoiceDialogFragment.newInstance(this)
         dialog.setOnItemSelectionAction(Action1<DurationOption> { option ->
             contentView?.setDurationOption(option)
         })
 
-        dialog.show(getSupportFragmentManager(), "duration_dialog")
+        dialog.show(fm, tag)
     }
 
-    fun showRingtoneDialog() {
+    private fun showRingtoneDialog() {
+        val ringtoneIntent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
+
+        ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, prefs?.getRingtoneUri())
+        ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false)
+        ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_RINGTONE)
+        ringtoneIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.setting_title_ringtone))
+
+        startActivityForResult(ringtoneIntent, REQUEST_CODE_RINGTONE)
     }
 }

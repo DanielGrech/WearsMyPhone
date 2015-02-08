@@ -11,6 +11,7 @@ import rx.Observable
 import rx.android.view.OnClickEvent
 import rx.android.view.ViewObservable
 import com.dgsd.android.wearsmyphone.model.DurationOption
+import android.view.View
 
 fun String.sentenceCase(): String {
     when {
@@ -28,6 +29,9 @@ public class MainActivityView(context: Context, attrs: AttributeSet) : ScrollVie
     private var durationSetting: SettingItemView? = null
     private var vibrationSetting: SettingItemView? = null
     private var flashLightSetting: SettingItemView? = null
+
+    private var onRingtoneClickObservable: Observable<OnClickEvent>? = null
+    private var onDurationClickObservable: Observable<OnClickEvent>? = null
 
     override fun onFinishInflate() {
         super.onFinishInflate()
@@ -92,6 +96,10 @@ public class MainActivityView(context: Context, attrs: AttributeSet) : ScrollVie
         durationSetting?.setSecondary(text)
     }
 
+    public fun setVibrateSupported(supported: Boolean) {
+        vibrationSetting?.setVisibility(if (supported) View.VISIBLE else View.GONE)
+    }
+
     public fun setVibrateStatus(enabled: Boolean) {
         vibrationSetting?.setChecked(enabled)
     }
@@ -109,10 +117,16 @@ public class MainActivityView(context: Context, attrs: AttributeSet) : ScrollVie
     }
 
     public fun observeDurationClick(): Observable<OnClickEvent> {
-        return ViewObservable.clicks(durationSetting)
+        if (onDurationClickObservable == null) {
+            onDurationClickObservable = ViewObservable.clicks(durationSetting)
+        }
+        return onDurationClickObservable!!
     }
 
     public fun observeRingtoneClick(): Observable<OnClickEvent> {
-        return ViewObservable.clicks(ringtoneSetting)
+        if (onRingtoneClickObservable == null) {
+            onRingtoneClickObservable = ViewObservable.clicks(ringtoneSetting)
+        }
+        return onRingtoneClickObservable!!
     }
 }

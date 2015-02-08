@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.dgsd.android.wearsmyphone.model.DurationOption
+import android.net.Uri
+import android.media.RingtoneManager
 
 public class AppPreferences private(context: Context) {
 
@@ -14,6 +16,7 @@ public class AppPreferences private(context: Context) {
         private val PREF_KEY_VIBRATE_ENABLED = "_vibrate_enabled"
         private val PREF_KEY_FLASH_LIGHT_ENABLED = "_flashlight_enabled"
         private val PREF_KEY_ALERT_DURATION = "_alert_duration"
+        private val PREF_KEY_RINGTONE_URI = "_ringtone_uri"
 
         private var instance: AppPreferences? = null
 
@@ -27,6 +30,19 @@ public class AppPreferences private(context: Context) {
 
     {
         preferences = PreferenceManager.getDefaultSharedPreferences(context)
+    }
+
+    public fun setRingtoneUri(uri: Uri) {
+        val uriToSave = uri?.toString() ?:
+                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE).toString()
+        setString(PREF_KEY_RINGTONE_URI, uriToSave)
+    }
+
+    public fun getRingtoneUri() : Uri {
+        val defaultUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
+        val uriFromPrefs = preferences.getString(PREF_KEY_RINGTONE_URI, null)
+
+        return if (uriFromPrefs == null) defaultUri else Uri.parse(uriFromPrefs)
     }
 
     public fun setDurationForAlert(duration: Long) {

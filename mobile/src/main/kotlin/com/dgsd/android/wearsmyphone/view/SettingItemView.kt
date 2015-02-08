@@ -13,6 +13,8 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.subjects.PublishSubject
 import rx.Observable
 import android.widget.Checkable
+import com.dgsd.android.wearsmyphone.util.hide
+import com.dgsd.android.wearsmyphone.util.show
 
 public class SettingItemView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs), Checkable {
 
@@ -47,8 +49,9 @@ public class SettingItemView(context: Context, attrs: AttributeSet) : LinearLayo
 
             if (ta.getBoolean(R.styleable.SettingItemView_showSwitch, false)) {
                 toggle.setVisibility(View.VISIBLE)
+                toggle.show()
             } else {
-                toggle.setVisibility(View.GONE)
+                toggle.hide()
             }
         } finally {
             ta.recycle()

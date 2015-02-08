@@ -3,6 +3,8 @@ package com.dgsd.android.wearsmyphone.service
 import android.app.IntentService
 import android.content.Intent
 import android.content.Context
+import com.dgsd.android.wearsmyphone.activity.AlertActivity
+import timber.log.Timber
 
 /**
  * Service responsible for starting/stopping the ringing intended to notify the user.
@@ -18,12 +20,12 @@ public class NoisyNotificationService :
         private val ACTION_STOP : String = "_action_stop"
 
         public fun startNotify(context: Context) {
-            val intent = Intent(context, NoisyNotificationService.javaClass).setAction(ACTION_START)
+            val intent = Intent(context, javaClass.getDeclaringClass()).setAction(ACTION_START)
             context.startService(intent)
         }
 
         public fun stopNotify(context: Context) {
-            val intent = Intent(context, NoisyNotificationService.javaClass).setAction(ACTION_STOP)
+            val intent = Intent(context, javaClass.getDeclaringClass()).setAction(ACTION_STOP)
             context.startService(intent)
         }
     }
@@ -36,10 +38,13 @@ public class NoisyNotificationService :
     }
 
     private fun startNotify() {
-        // TODO: Start ringing!
+        val intent = Intent(getApplication(), javaClass<AlertActivity>())
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        getApplication().startActivity(intent)
     }
 
     private fun stopNotify() {
         // TODO: Stop ringing!
+        getApplication().sendBroadcast(Intent(AlertActivity.ACTION_STOP_NOTIFY))
     }
 }
