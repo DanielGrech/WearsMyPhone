@@ -98,6 +98,10 @@ public class MainActivityView(context: Context, attrs: AttributeSet) : ScrollVie
         vibrationSetting?.setVisibility(if (supported) View.VISIBLE else View.GONE)
     }
 
+    public fun setFlashlightSupported(supported: Boolean) {
+        flashLightSetting?.setVisibility(if (supported) View.VISIBLE else View.GONE)
+    }
+
     public fun setVibrateStatus(enabled: Boolean) {
         vibrationSetting?.setChecked(enabled)
     }

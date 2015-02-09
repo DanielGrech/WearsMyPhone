@@ -21,10 +21,17 @@ import android.os.Build
 import android.media.AudioAttributes
 import com.dgsd.android.wearsmyphone.view.AlertActivityView
 import com.dgsd.android.wearsmyphone.service.NoisyNotificationService
+import android.hardware.Camera
+import android.content.pm.PackageManager
+import android.hardware.Camera.Parameters
+import android.view.SurfaceView
+import android.view.SurfaceHolder
 
 public class AlertActivity : ActionBarActivity() {
 
     private var prefs: AppPreferences? = null
+
+    private var camera: Camera? = null
 
     private var vibrator: Vibrator? = null
 
@@ -98,6 +105,10 @@ public class AlertActivity : ActionBarActivity() {
             vibrator?.vibrate(longArray(0L, 500L, 500L), 0)
         }
 
+        if (isFlashEnabled()) {
+            startFlash()
+        }
+
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
             ringtone?.setStreamType(stream)
         } else {
@@ -105,7 +116,7 @@ public class AlertActivity : ActionBarActivity() {
                     .setLegacyStreamType(stream)
                     .build())
         }
-        ringtone?.play()
+//        ringtone?.play()
 
         NoisyNotificationService.notifyAlertChange(this, true)
 
@@ -125,6 +136,9 @@ public class AlertActivity : ActionBarActivity() {
                     AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE)
         }
 
+        if (isFlashEnabled()) {
+            stopFlash()
+        }
 
         if (isVibratorEnabled()) {
             vibrator?.cancel()
@@ -157,5 +171,62 @@ public class AlertActivity : ActionBarActivity() {
 
     private fun isVibratorEnabled(): Boolean {
         return vibrator?.hasVibrator()?.and(prefs?.isVibrateEnabled() ?: false) ?: false
+    }
+
+    private fun isFlashEnabled(): Boolean {
+        return getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH) &&
+                (prefs?.isFlashlightEnabled() ?: true)
+    }
+
+    private fun startFlash() {
+        val preview = findViewById(R.id.preview) as SurfaceView;
+        val holder = preview.getHolder();
+        holder.addCallback(object: SurfaceHolder.Callback {
+            override fun surfaceCreated(holder: SurfaceHolder) {
+
+            }
+
+            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+                try {
+                    camera?.setPreviewDisplay(holder)
+                } catch (throwable: Throwable) {
+                    // Oh well..
+                }
+            }
+
+            override fun surfaceDestroyed(holder: SurfaceHolder?) {
+                try {
+                    camera?.stopPreview()
+                } catch (ex: Exception) {
+                    // Oh well..
+                }
+            }
+        })
+
+        camera = Camera.open()
+
+        try {
+            camera?.setPreviewDisplay(holder)
+            val params = camera?.getParameters()
+            params?.setFlashMode(Parameters.FLASH_MODE_TORCH)
+            params?.setFocusMode(Parameters.FOCUS_MODE_INFINITY)
+            camera?.setParameters(params)
+            camera?.startPreview()
+        } catch (throwable: Throwable) {
+            Timber.e(throwable, "Error starting flashlight")
+        }
+    }
+
+    private fun stopFlash() {
+        try {
+            val params = camera?.getParameters()
+            params?.setFlashMode(Parameters.FLASH_MODE_OFF);
+            camera?.setParameters(params);
+            camera?.stopPreview();
+        } catch (throwable: Throwable) {
+            Timber.e(throwable, "Error stopping flashlight")
+        } finally {
+            camera?.release()
+        }
     }
 }

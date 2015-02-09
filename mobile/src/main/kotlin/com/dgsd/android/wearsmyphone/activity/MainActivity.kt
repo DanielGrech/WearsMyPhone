@@ -24,6 +24,7 @@ import android.media.RingtoneManager
 import android.net.Uri
 import com.dgsd.android.wearsmyphone.service.NoisyNotificationService
 import com.dgsd.android.common.util.getDeviceNames
+import android.content.pm.PackageManager
 
 public class MainActivity : ActionBarActivity(), DataApi.DataListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
@@ -73,6 +74,8 @@ public class MainActivity : ActionBarActivity(), DataApi.DataListener, GoogleApi
 
         val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         contentView?.setVibrateSupported(vibrator.hasVibrator())
+        contentView?.setFlashlightSupported(getPackageManager()
+                .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH))
     }
 
     override fun onDestroy() {

@@ -32,4 +32,9 @@
 
     </FrameLayout>
 
+    <SurfaceView
+        android:id="@+id/preview"
+        android:layout_width="1px"
+        android:layout_height="1px"/>
+
 </com.dgsd.android.wearsmyphone.view.AlertActivityView>
