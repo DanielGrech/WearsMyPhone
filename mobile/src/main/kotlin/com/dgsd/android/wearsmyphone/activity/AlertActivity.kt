@@ -116,7 +116,7 @@ public class AlertActivity : ActionBarActivity() {
                     .setLegacyStreamType(stream)
                     .build())
         }
-//        ringtone?.play()
+        ringtone?.play()
 
         NoisyNotificationService.notifyAlertChange(this, true)
 
