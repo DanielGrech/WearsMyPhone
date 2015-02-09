@@ -61,4 +61,17 @@ dependencies {
     compile 'com.crashlytics.android:crashlytics:1.+'
     compile 'io.reactivex:rxandroid:0.24.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+buildscript {
+    ext.kotlin_version = '0.10.770'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+repositories {
+    mavenCentral()
 }

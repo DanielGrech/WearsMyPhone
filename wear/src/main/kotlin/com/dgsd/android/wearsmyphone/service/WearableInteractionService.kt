@@ -1,58 +1,28 @@
 package com.dgsd.android.wearsmyphone.service
 
-import com.dgsd.android.common.WearableConstants
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.wearable.Wearable
-import com.google.android.gms.wearable.WearableListenerService
-
-import java.util.concurrent.TimeUnit
-
-import timber.log.Timber
-import com.google.android.gms.wearable.PutDataMapRequest
+import com.dgsd.android.common.service.BaseWearableInteractionService
 import com.google.android.gms.wearable.MessageEvent
-import android.os.Build
+import timber.log.Timber
+import com.google.android.gms.common.api.GoogleApiClient
+import com.dgsd.android.common.WearableConstants
+import com.google.android.gms.wearable.PutDataMapRequest
 
-public class WearableInteractionService : WearableListenerService() {
+public class WearableInteractionService : BaseWearableInteractionService() {
 
-    private var apiClient: GoogleApiClient? = null
-
-    override fun onCreate() {
-        super.onCreate()
-        Timber.d("onCreate()")
-
-        apiClient = GoogleApiClient.Builder(this).addApi(Wearable.API).build()
-        apiClient?.connect()
-    }
-
-    override fun onMessageReceived(messageEvent: MessageEvent?) {
-        super.onMessageReceived(messageEvent)
-
-        if (!apiClient!!.isConnected()) {
-            val connResult = apiClient!!.blockingConnect(
-                    WearableConstants.API_CONNECTION_TIMEOUT.toLong(), TimeUnit.SECONDS)
-            if (!connResult.isSuccess()) {
-                Timber.w("Could not connect to GoogleApiClient")
-                return
+    override fun onMessageEvent(client: GoogleApiClient, event: MessageEvent) {
+        when (event.getPath()) {
+            WearableConstants.Path.SEND_DEVICE_NAME -> { sendDeviceName() }
+            else -> {
+                Timber.w("Unrecognised message event path: %s", event.getPath())
             }
-        }
-
-        if (WearableConstants.Path.SEND_DEVICE_NAME.equals(messageEvent?.getPath())) {
-            sendDeviceName()
         }
     }
 
     private fun sendDeviceName() {
-        val dataMapRequest = PutDataMapRequest.create(WearableConstants.Path.DEVICE_NAME)
+        val dataMapRequest = PutDataMapRequest.create(WearableConstants.Path.WATCH_NAME)
         dataMapRequest.getDataMap().putString(WearableConstants.Data.DEVICE_NAME, getDeviceName())
 
-        // Not used, but necessary to trigger a 'change' on Android Wear
-        dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
-
-        val pendingResult = Wearable.DataApi.putDataItem(apiClient, dataMapRequest.asPutDataRequest())
-        pendingResult.await(WearableConstants.API_CONNECTION_TIMEOUT.toLong(), TimeUnit.SECONDS)
+        sendData(dataMapRequest)
     }
 
-    private fun getDeviceName() : String {
-        return "${Build.BRAND} ${Build.MODEL}"
-    }
 }

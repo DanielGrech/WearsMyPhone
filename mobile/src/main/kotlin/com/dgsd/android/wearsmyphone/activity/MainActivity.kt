@@ -11,10 +11,7 @@ import com.dgsd.android.wearsmyphone.util.AppPreferences
 import com.google.android.gms.wearable.DataApi
 import com.google.android.gms.wearable.DataEventBuffer
 import java.util.HashSet
-import com.google.android.gms.wearable.DataEvent
 import com.dgsd.android.common.WearableConstants
-import com.google.android.gms.wearable.DataMapItem
-import android.text.TextUtils
 import com.dgsd.android.wearsmyphone.fragment.DurationChoiceDialogFragment
 import com.dgsd.android.wearsmyphone.model.DurationOption
 import rx.functions.Action1
@@ -26,6 +23,7 @@ import android.os.Vibrator
 import android.media.RingtoneManager
 import android.net.Uri
 import com.dgsd.android.wearsmyphone.service.NoisyNotificationService
+import com.dgsd.android.common.util.getDeviceNames
 
 public class MainActivity : ActionBarActivity(), DataApi.DataListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
@@ -128,23 +126,10 @@ public class MainActivity : ActionBarActivity(), DataApi.DataListener, GoogleApi
     }
 
     override fun onDataChanged(dataEvents: DataEventBuffer?) {
-        var changed = false
-        dataEvents?.forEach { event ->
-            if (DataEvent.TYPE_CHANGED.equals(event.getType())) {
-                val dataItem = event.getDataItem()
-                if (WearableConstants.Path.DEVICE_NAME.equals(dataItem.getUri().getPath())) {
-                    val deviceName = DataMapItem.fromDataItem(dataItem)
-                            .getDataMap()?.getString(WearableConstants.Data.DEVICE_NAME)
-                    if (!TextUtils.isEmpty(deviceName)) {
-                        peerNames.add(deviceName!!)
-                        changed = true
-                    }
-                }
-            }
-        }
-
-        if (changed) {
+        val names = dataEvents?.getDeviceNames(true)
+        if (names != null && !names.isEmpty()) {
             runOnUiThread {
+                peerNames.addAll(names)
                 contentView!!.populateWithPeers(peerNames)
             }
         }

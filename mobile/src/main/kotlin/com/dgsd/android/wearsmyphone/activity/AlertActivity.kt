@@ -20,6 +20,7 @@ import rx.Subscription
 import android.os.Build
 import android.media.AudioAttributes
 import com.dgsd.android.wearsmyphone.view.AlertActivityView
+import com.dgsd.android.wearsmyphone.service.NoisyNotificationService
 
 public class AlertActivity : ActionBarActivity() {
 
@@ -76,6 +77,11 @@ public class AlertActivity : ActionBarActivity() {
         super.onDestroy()
     }
 
+    override fun finish() {
+        NoisyNotificationService.notifyAlertChange(this, false)
+        super.finish()
+    }
+
     override fun onResume() {
         super.onResume()
 
@@ -100,6 +106,8 @@ public class AlertActivity : ActionBarActivity() {
                     .build())
         }
         ringtone?.play()
+
+        NoisyNotificationService.notifyAlertChange(this, true)
 
         val alertDuration = TimeUnit.SECONDS.toMillis(prefs!!.getDurationForAlert())
 

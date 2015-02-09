@@ -33,7 +33,7 @@ public class AppPreferences private(context: Context) {
     }
 
     public fun setRingtoneUri(uri: Uri) {
-        val uriToSave = uri?.toString() ?:
+        val uriToSave = uri.toString() ?:
                 RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE).toString()
         setString(PREF_KEY_RINGTONE_URI, uriToSave)
     }

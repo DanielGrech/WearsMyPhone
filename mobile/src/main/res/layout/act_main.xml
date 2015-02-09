@@ -52,20 +52,20 @@
             android:id="@+id/ringtone"
             app:primary="@string/setting_title_ringtone"
             app:secondary="This is the secondary"
-            app:settingIcon="@drawable/ic_launcher"
+            app:settingIcon="@drawable/ic_volume_up"
             style="@style/SettingItemView"/>
 
         <com.dgsd.android.wearsmyphone.view.SettingItemView
             android:id="@+id/duration"
             app:primary="@string/setting_title_duration"
-            app:settingIcon="@drawable/ic_launcher"
+            app:settingIcon="@drawable/ic_access_time"
             style="@style/SettingItemView"/>
 
         <com.dgsd.android.wearsmyphone.view.SettingItemView
             android:id="@+id/vibrate"
             app:primary="@string/setting_title_vibrate"
             app:secondary="@string/setting_summary_vibrate"
-            app:settingIcon="@drawable/ic_launcher"
+            app:settingIcon="@drawable/ic_vibration"
             app:showSwitch="true"
             style="@style/SettingItemView"/>
 
@@ -73,7 +73,7 @@
             android:id="@+id/flashlight"
             app:primary="@string/setting_title_flashlight"
             app:secondary="@string/setting_summary_flashlight"
-            app:settingIcon="@drawable/ic_launcher"
+            app:settingIcon="@drawable/ic_flash"
             app:showSwitch="true"
             style="@style/SettingItemView"/>
 

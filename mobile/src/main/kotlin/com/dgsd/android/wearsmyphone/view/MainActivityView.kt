@@ -12,13 +12,7 @@ import rx.android.view.OnClickEvent
 import rx.android.view.ViewObservable
 import com.dgsd.android.wearsmyphone.model.DurationOption
 import android.view.View
-
-fun String.sentenceCase(): String {
-    when {
-        this.length() <= 1 -> return this
-        else -> return "${Character.toUpperCase(this[0])}${this.substring(1)}"
-    }
-}
+import com.dgsd.android.common.util.sentenceCase
 
 public class MainActivityView(context: Context, attrs: AttributeSet) : ScrollView(context, attrs) {
 
@@ -73,7 +67,7 @@ public class MainActivityView(context: Context, attrs: AttributeSet) : ScrollVie
                 subtitle = res.getString(R.string.connected)
             }
             else -> {
-                title = res.getString(R.string.x_devices_connected)
+                title = res.getString(R.string.x_devices_connected, peerNames.size())
                 subtitle = TextUtils.join(", ", peerNames.map { n -> n.sentenceCase() })
             }
         }
