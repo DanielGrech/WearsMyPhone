@@ -2,6 +2,8 @@
 <android.support.wearable.view.BoxInsetLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/inset_layout"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
@@ -20,9 +22,11 @@
             android:layout_alignParentBottom="true"
             android:gravity="center"
             android:textColor="@color/primary_text"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:maxLines="1"
-            android:ellipsize="end"/>
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-light"
+            tools:text="Google Nexus 6"/>
 
         <android.support.wearable.view.CircledImageView
             android:id="@+id/action"
@@ -30,7 +34,11 @@
             android:layout_height="match_parent"
             android:layout_above="@id/node_name"
             android:src="@drawable/ic_action_play"
-            app:circle_color="@color/primary"/>
+            app:circle_color="@color/primary"
+            tools:layout_width="320px"
+            tools:layout_height="320px"
+            tools:src="@drawable/ic_action_play"
+            tools:background="@color/primary"/>
 
     </RelativeLayout>
 </android.support.wearable.view.BoxInsetLayout>

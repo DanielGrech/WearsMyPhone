@@ -16,11 +16,15 @@ import com.dgsd.android.common.util.sentenceCase
 import android.support.wearable.view.CircledImageView
 import com.dgsd.android.wearsmyphone.util.onPreDraw
 import com.dgsd.android.common.util.getCurrentAlertStatus
+import android.support.wearable.view.BoxInsetLayout
+import android.widget.Toast
 
 public class TriggerAlarmActivity : Activity(), GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, DataApi.DataListener {
 
     private var apiClient: GoogleApiClient? = null
+
+    private var insetLayout: BoxInsetLayout? = null
 
     private var deviceName: TextView? = null
 
@@ -28,19 +32,37 @@ public class TriggerAlarmActivity : Activity(), GoogleApiClient.ConnectionCallba
 
     private var nodeId: String? = null
 
+    private var currentAlertStatus: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super<Activity>.onCreate(savedInstanceState)
         setContentView(R.layout.act_trigger_alarm)
 
+        insetLayout = findViewById(R.id.inset_layout) as BoxInsetLayout
         deviceName = findViewById(R.id.node_name) as TextView
         image = findViewById(R.id.action) as CircledImageView
         image?.onPreDraw {
-            image?.setCircleRadius(image!!.getMeasuredHeight().toFloat().div(2))
+            val insets = insetLayout!!.getInsets()
+            val inset = Math.max(Math.abs(insets.width()), Math.abs(insets.height()))
+            val radius = image!!.getHeight().toFloat().div(2).minus(inset.times(2))
+
+            image?.setCircleRadius(radius)
+            image?.setCircleRadiusPressed(radius.times(0.8f))
         }
         image?.setOnClickListener {
-            if (nodeId != null) {
-                Wearable.MessageApi.sendMessage(apiClient, nodeId,
-                        WearableConstants.Path.ALERT_START, null)
+            var path: String? = null
+            when (currentAlertStatus) {
+                WearableConstants.AlertStatus.RUNNING -> {
+                    path = WearableConstants.Path.ALERT_STOP
+                }
+                WearableConstants.AlertStatus.NOT_RUNNING -> {
+                    path = WearableConstants.Path.ALERT_START
+                }
+            }
+
+            if (path != null && nodeId != null) {
+                image?.showIndeterminateProgress(true)
+                Wearable.MessageApi.sendMessage(apiClient, nodeId, path, null)
             }
         }
 
@@ -71,6 +93,9 @@ public class TriggerAlarmActivity : Activity(), GoogleApiClient.ConnectionCallba
                 nodeId = nodes.first().getId()
                 Wearable.MessageApi.sendMessage(apiClient, nodeId,
                         WearableConstants.Path.SEND_DEVICE_NAME, null).await()
+
+                Wearable.MessageApi.sendMessage(apiClient, nodeId,
+                        WearableConstants.Path.SEND_ALERT_STATUS, null).await()
             }
         }.start()
     }
@@ -87,6 +112,8 @@ public class TriggerAlarmActivity : Activity(), GoogleApiClient.ConnectionCallba
     }
 
     private fun updateCurrentAlertStatus(alertStatus: String) {
+        image?.showIndeterminateProgress(false)
+        currentAlertStatus = alertStatus
         when (alertStatus) {
             WearableConstants.AlertStatus.RUNNING -> {
                 image?.setImageResource(R.drawable.ic_action_stop)
@@ -111,7 +138,9 @@ public class TriggerAlarmActivity : Activity(), GoogleApiClient.ConnectionCallba
         when (alertStatus) {
             WearableConstants.AlertStatus.RUNNING,
             WearableConstants.AlertStatus.NOT_RUNNING -> {
-                updateCurrentAlertStatus(alertStatus)
+                runOnUiThread {
+                    updateCurrentAlertStatus(alertStatus)
+                }
             }
         }
     }

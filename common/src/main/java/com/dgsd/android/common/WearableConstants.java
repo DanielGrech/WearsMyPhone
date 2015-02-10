@@ -7,6 +7,7 @@ public class WearableConstants {
         public static final String ALERT_STOP = "/stop_alert";
         public static final String ALERT_STATUS = "/alert_status";
         public static final String SEND_DEVICE_NAME = "/send_device_name";
+        public static final String SEND_ALERT_STATUS = "/send_alert_status";
         public static final String DEVICE_NAME = "/device_name";
         public static final String WATCH_NAME = "/watch_name";
     }

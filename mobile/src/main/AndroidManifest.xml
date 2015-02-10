@@ -31,7 +31,8 @@
             android:launchMode="singleInstance"
             android:excludeFromRecents="true"
             android:taskAffinity=""
-            android:showOnLockScreen="true"/>
+            android:showOnLockScreen="true"
+            android:screenOrientation="sensorPortrait"/>
 
         <service android:name=".service.WearableInteractionService">
             <intent-filter>
