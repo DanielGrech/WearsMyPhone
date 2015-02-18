@@ -109,7 +109,7 @@ public class AlertActivity : ActionBarActivity() {
             startFlash()
         }
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT <= 19) {
             ringtone?.setStreamType(stream)
         } else {
             ringtone?.setAudioAttributes(AudioAttributes.Builder()

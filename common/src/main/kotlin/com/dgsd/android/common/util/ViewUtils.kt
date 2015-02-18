@@ -17,7 +17,7 @@ public fun View.onPreDraw(action: () -> Unit) {
             getViewTreeObserver().removeOnPreDrawListener(this)
 
             val shouldExecute: Boolean
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (Build.VERSION.SDK_INT >= 19) {
                 shouldExecute = isAttachedToWindow();
             } else {
                 shouldExecute = isShown();

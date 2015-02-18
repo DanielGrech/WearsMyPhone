@@ -67,7 +67,7 @@ public class AppPreferences private(context: Context) {
     }
 
     public fun isVibrateEnabled() : Boolean {
-        return preferences.getBoolean(PREF_KEY_VIBRATE_ENABLED, false)
+        return preferences.getBoolean(PREF_KEY_VIBRATE_ENABLED, true)
     }
 
     private fun setString(key: String, value: String) {
