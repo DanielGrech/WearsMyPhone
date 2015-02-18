@@ -137,7 +137,7 @@ public class TriggerAlarmActivity : Activity(), GoogleApiClient.ConnectionCallba
 
     override fun onDataChanged(dataEvents: DataEventBuffer?) {
         val names = dataEvents?.getDeviceNames(false)
-        if (names != null && !names!!.isEmpty()) {
+        if (names != null && !names.isEmpty()) {
             runOnUiThread {
 //                deviceName?.setText(names.first().sentenceCase())
             }
