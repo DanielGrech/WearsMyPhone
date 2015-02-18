@@ -26,12 +26,13 @@ public fun DataEventBuffer.getDeviceNames(fromWatch: Boolean): Set<String> {
         }
 
         path.equals(dataItem.getUri().getPath())
-    }.forEach { dataItem ->
-        val deviceName = DataMapItem.fromDataItem(dataItem)
+    }.map { dataItem ->
+        DataMapItem.fromDataItem(dataItem)
                 .getDataMap()?.getString(WearableConstants.Data.DEVICE_NAME)
-        if (!TextUtils.isEmpty(deviceName)) {
-            names.add(deviceName!!)
-        }
+    }.filter { deviceName ->
+        !TextUtils.isEmpty(deviceName)
+    }.forEach { deviceName ->
+        names.add(deviceName)
     }
     return names
 }

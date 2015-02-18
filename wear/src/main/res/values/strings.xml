@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Wears My Phone</string>
+    <string name="error_message_no_nodes">No connected devices</string>
+    <string name="error_message_play_services">Error connecting</string>
 </resources>

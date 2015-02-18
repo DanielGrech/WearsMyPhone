@@ -12,12 +12,16 @@ import com.google.android.gms.wearable.Wearable
 import com.dgsd.android.common.util.getDeviceNames
 import com.dgsd.android.wearsmyphone.R
 import android.widget.TextView
-import com.dgsd.android.common.util.sentenceCase
 import android.support.wearable.view.CircledImageView
 import com.dgsd.android.wearsmyphone.util.onPreDraw
 import com.dgsd.android.common.util.getCurrentAlertStatus
 import android.support.wearable.view.BoxInsetLayout
-import android.widget.Toast
+import android.support.annotation.DrawableRes
+import android.graphics.drawable.Drawable
+import android.graphics.PorterDuff
+import android.support.annotation.StringRes
+import com.dgsd.android.wearsmyphone.util.show
+import com.dgsd.android.wearsmyphone.util.hide
 
 public class TriggerAlarmActivity : Activity(), GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, DataApi.DataListener {
@@ -26,9 +30,11 @@ public class TriggerAlarmActivity : Activity(), GoogleApiClient.ConnectionCallba
 
     private var insetLayout: BoxInsetLayout? = null
 
-    private var deviceName: TextView? = null
+//    private var deviceName: TextView? = null
 
     private var image: CircledImageView? = null
+
+    private var errorMessage: TextView? = null
 
     private var nodeId: String? = null
 
@@ -39,16 +45,19 @@ public class TriggerAlarmActivity : Activity(), GoogleApiClient.ConnectionCallba
         setContentView(R.layout.act_trigger_alarm)
 
         insetLayout = findViewById(R.id.inset_layout) as BoxInsetLayout
-        deviceName = findViewById(R.id.node_name) as TextView
+//        deviceName = findViewById(R.id.node_name) as TextView
+        errorMessage = findViewById(R.id.error_message) as TextView
         image = findViewById(R.id.action) as CircledImageView
+        image?.setImageDrawable(getTintedDrawable(R.drawable.ic_action_play))
         image?.onPreDraw {
             val insets = insetLayout!!.getInsets()
             val inset = Math.max(Math.abs(insets.width()), Math.abs(insets.height()))
             val radius = image!!.getHeight().toFloat().div(2).minus(inset.times(2))
 
             image?.setCircleRadius(radius)
-            image?.setCircleRadiusPressed(radius.times(0.8f))
+            image?.setCircleRadiusPressed(radius.times(0.95f))
         }
+
         image?.setOnClickListener {
             var path: String? = null
             when (currentAlertStatus) {
@@ -87,7 +96,7 @@ public class TriggerAlarmActivity : Activity(), GoogleApiClient.ConnectionCallba
             val nodes = Wearable.NodeApi.getConnectedNodes(apiClient).await()?.getNodes()
             if (nodes == null || nodes.isEmpty()) {
                 runOnUiThread {
-                    // TODO: No connected nodes!
+                    showError(R.string.error_message_no_nodes)
                 }
             } else {
                 nodeId = nodes.first().getId()
@@ -104,11 +113,13 @@ public class TriggerAlarmActivity : Activity(), GoogleApiClient.ConnectionCallba
     }
 
     override fun onConnectionFailed(connectionResult: ConnectionResult?) {
-        showError()
+        showError(R.string.error_message_play_services)
     }
 
-    private fun showError() {
-        // TODO: Show error!
+    private fun showError(StringRes errorMessageRes: Int) {
+        errorMessage?.setText(errorMessageRes)
+        errorMessage?.show()
+        image?.hide()
     }
 
     private fun updateCurrentAlertStatus(alertStatus: String) {
@@ -116,10 +127,10 @@ public class TriggerAlarmActivity : Activity(), GoogleApiClient.ConnectionCallba
         currentAlertStatus = alertStatus
         when (alertStatus) {
             WearableConstants.AlertStatus.RUNNING -> {
-                image?.setImageResource(R.drawable.ic_action_stop)
+                image?.setImageDrawable(getTintedDrawable(R.drawable.ic_action_stop))
             }
             WearableConstants.AlertStatus.NOT_RUNNING -> {
-                image?.setImageResource(R.drawable.ic_action_play)
+                image?.setImageDrawable(getTintedDrawable(R.drawable.ic_action_play))
             }
         }
     }
@@ -128,7 +139,7 @@ public class TriggerAlarmActivity : Activity(), GoogleApiClient.ConnectionCallba
         val names = dataEvents?.getDeviceNames(false)
         if (names != null && !names!!.isEmpty()) {
             runOnUiThread {
-                deviceName?.setText(names.first().sentenceCase())
+//                deviceName?.setText(names.first().sentenceCase())
             }
 
             return
@@ -143,5 +154,12 @@ public class TriggerAlarmActivity : Activity(), GoogleApiClient.ConnectionCallba
                 }
             }
         }
+    }
+
+    private fun getTintedDrawable(DrawableRes res: Int) : Drawable {
+        val drawable = getDrawable(res)
+        drawable.setColorFilter(
+                getResources().getColor(R.color.primary), PorterDuff.Mode.MULTIPLY)
+        return drawable
     }
 }
