@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-//apply plugin: 'crashlytics'
+apply plugin: 'crashlytics'
 
 android {
     compileSdkVersion 21
